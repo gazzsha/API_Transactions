@@ -8,6 +8,8 @@
 
 ## Запуск
 
+Необходимо сначала запускать Сервис Клиента для создание БД.
+
 Поднять базы данные Postgres & Casandra
 ```
 docker compose up
@@ -15,11 +17,17 @@ docker compose up
 
 Сборка .jar и запуск .jar file 
 ```
-./gradlew clean
+cd ClientTransaction
+./gradlew clean build
+cd ../BankTransaction
+./gradlew clean build
 ```
 Запуск .jar file
 ```
-java -jar ...
+cd ClientTransaction
+java -jar build/libs/ClientTransaction-0.0.1-SNAPSHOT.jar
+cd ../
+java -jar BankTransaction/build/libs/BankTransaction-0.0.1-SNAPSHOT.jar
 ```
 
 ## Описание 
@@ -28,6 +36,11 @@ BankService получается доступные валюты из внешн
 Из-за огранечений внешнего API, делается несколько запросов в минуту. В среднем занимает 8~10 минут.
 
 ClientService отвечает за клиентские запросы. (Полуить транзакции, создать bank-account, обновить лимиты)
+
+
+## Документация
+
+ClientService Documentation находится в папке ClientTransaction
 
 
 
