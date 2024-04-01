@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+  cassandra:
+    image: cassandra:latest
+    ports:
+     - "9042:9042" 
+    volumes:
+      - ./database/init_script.cql:/init_script.cql
+    command: ["sh", "-c", "cqlsh -u casandra-p casandra -f /init_script.cql"]

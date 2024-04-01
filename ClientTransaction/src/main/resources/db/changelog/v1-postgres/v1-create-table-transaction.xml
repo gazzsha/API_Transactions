@@ -1,0 +1,44 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="v1-3" author="Rysaev Aydar">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="transaction"/>
+            </not>
+        </preConditions>
+        <createTable tableName="transaction">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="account_from" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_to" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency_shortname" type="varchar(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_time" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expense_category" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="limit_exceeded" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sum" type="numeric(38,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="limit_id" type="bigint">
+                <constraints foreignKeyName="limit_transaction_fk"
+                             referencedTableName="limits"
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,32 @@
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="v1-2" author="Rysaev Aydar">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="limits"/>
+            </not>
+        </preConditions>
+        <createTable tableName="limits">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="category" type="varchar(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_time" type="TIMESTAMP WITH TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="limit_sum" type="numeric(38,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bank_account_id" type="bigint">
+                <constraints foreignKeyName="bank_account_limits_fk"
+                             referencedTableName="bank_account"
+                             referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

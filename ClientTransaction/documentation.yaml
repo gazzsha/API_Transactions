@@ -1,0 +1,221 @@
+openapi: 3.0.3
+info:
+  title: Сервис клиентских запросов
+  version: 0.0.1
+servers: 
+  - url: http://localhost:8081/api
+    description: Client server
+paths:
+  /transactions:
+    get:
+      summary: Метод получения транзакций, превысивших лимит
+      tags:
+        - transactions
+      operationId: getTransactions
+      responses:
+        "200":
+          description: Успешный ответ со списком транзакций
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FullInformationTransactionsDto"
+        "default":
+          description: Ошибка
+          
+  /limits/{bank_account}:
+    get:
+      summary: Метод получения лимитов банковского аккаунта
+      tags:
+         - limit
+      operationId: getLimitsByAccount 
+      parameters: 
+        - name: bank_account
+          in: path
+          required: true
+          description: Номер банк аккаунта
+          schema:
+            type: integer
+          example: 123
+      responses:
+        "200":
+          description: Успешный ответ со списком транзакций
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/limits"
+        "default":
+          description: Bad Request
+  /limits/{account_bank}:
+    post:
+      summary: Обновление лимитов банковского аккаунта
+      tags:
+        - limits
+      operationId: updateLimits
+      parameters:
+        - name: account_bank
+          in: path
+          required: true
+          description: Номер банковского аккаунта
+          schema:
+            type: integer
+            format: int64
+          example: 123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LimitDto"
+      responses:
+        "200":
+          description: Успешное обновление лимитов
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankAccount"
+        "default":
+          description: Ошибка
+  /create:
+    post:
+      summary: Создание банковского аккаунта
+      tags:
+        - bank_account
+      operationId: createBankAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BankAccountDto"
+      responses:
+        "200":
+          description: Успешное создание банковского аккаунта
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BankAccount"
+        "default":
+          description: Ошибка
+              
+  
+components:
+  schemas:
+    FullInformationTransactionDto:
+      type: object
+      required: 
+        - account_from
+        - account_to
+        - currency_shortname
+        - sum
+        - expense_category
+        - datetime
+        - limit_sum
+        - limit_datetime
+        - limit_currency_shortname
+      properties:
+        account_from:
+          type: integer
+          format: int64
+          example: 123
+        account_to:
+          type: integer
+          format: int64
+          example: 9999999999
+        sum:
+          type: number
+          example: 1000.45
+        currency_shortname:
+          type: string
+          example: RUB
+        datetime:
+          type: string
+          format: 2022-07-01T15:00:00:00+1
+        limit_sum:
+          type: number
+          example: 500.45
+        limit_datetime:
+          type: string
+          format: 2022-06-01T15:00:00:00+1
+        limit_currency_shortname:
+          type: string
+          example: USD
+    FullInformationTransactionsDto:
+      type: array
+      items: 
+        $ref: "#/components/schemas/FullInformationTransactionDto"
+    limits:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор лимита
+        limitSum:
+          type: number
+          format: decimal
+          description: Сумма лимита
+          example: 500.45
+        category:
+          type: string
+          enum: [SERVICE,PRODUCT]  # Assuming Enum values
+          description: Категория лимита
+        dateTime:
+          type: string
+          format: date-time
+          description: Дата и время установки лимита
+        bankAccount:
+            $ref: "#/components/schemas/BankAccount"
+    BankAccount:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Уникальный идентификатор банковского аккаунта
+          example: 1
+        account:
+          type: integer
+          format: int64
+          description: Номер банковского аккаунта
+          example: 123
+        moneyService:
+          type: number
+          format: decimal
+          description: Сумма денег на сервисном счету
+          example: 1000
+        moneyProduct:
+          type: number
+          format: decimal
+          description: Сумма денег на счету по продукту
+          example: 1000
+    LimitDto:
+      type: object
+      properties:
+        limit:
+          type: number
+          description: Сумма лимита
+        category:
+          type: string
+          enum: [SERVICE,PRODUCT] 
+          description: Категория лимита
+        dateTime:
+          type: string
+          format: date-time
+          description: Дата и время установки лимита
+    BankAccountDto:
+      type: object
+      properties:
+        account:
+          type: integer
+          description: Номер банковского аккаунта
+        limits:
+          type: array
+          items:
+            $ref: "#/components/schemas/LimitDto"
+
+          
+          
+    
+    
+
+  
