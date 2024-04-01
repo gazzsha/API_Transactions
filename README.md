@@ -1,5 +1,5 @@
 
-# ***REST API(GET) Client And Bank Service***
+# ***REST API Client And Bank Service***
 
 ## Описание проекта
 
